@@ -4,6 +4,7 @@ Configuration module for voicebox backend.
 Handles data directory configuration for production bundling.
 """
 
+import json
 import logging
 import os
 from pathlib import Path
@@ -58,6 +59,52 @@ def get_data_dir() -> Path:
         Path to the data directory
     """
     return _data_dir
+
+
+def get_config_file() -> Path:
+    """Path to the per-user config file (``~/.voicebox/config.json``).
+
+    ``VOICEBOX_CONFIG_FILE`` overrides the location (used by tests and dev).
+    """
+    override = os.environ.get("VOICEBOX_CONFIG_FILE")
+    if override:
+        return Path(override).expanduser()
+    return Path.home() / ".voicebox" / "config.json"
+
+
+def load_user_config() -> None:
+    """Load the per-user config file into ``os.environ``.
+
+    The file lives at ``~/.voicebox/config.json`` — outside the read-only app
+    bundle — and holds an ``env`` map applied as environment variables, e.g.::
+
+        {
+          "env": {
+            "HF_TOKEN": "hf_xxx",
+            "HF_ENDPOINT": "https://hf-mirror.com"
+          }
+        }
+
+    These are applied before torch / huggingface_hub initialize so download
+    acceleration (HF_TOKEN / HF_ENDPOINT) works from the packaged app.
+    """
+    config_file = get_config_file()
+    if not config_file.exists():
+        return
+    try:
+        with open(config_file, encoding="utf-8") as f:
+            data = json.load(f)
+    except (OSError, ValueError) as e:
+        logger.warning("Failed to read user config %s: %s", config_file, e)
+        return
+    env_map = data.get("env") if isinstance(data, dict) else None
+    if not isinstance(env_map, dict):
+        logger.warning("User config %s has no 'env' object", config_file)
+        return
+    for key, value in env_map.items():
+        if isinstance(value, str) and value:
+            os.environ[key] = value
+    logger.info("Loaded user config from: %s", config_file)
 
 
 def to_storage_path(path: str | Path) -> str:

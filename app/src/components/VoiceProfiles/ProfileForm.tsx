@@ -70,6 +70,7 @@ const DEFAULT_ENGINE_OPTIONS = [
   { value: 'chatterbox_turbo', label: 'Chatterbox Turbo' },
   { value: 'tada', label: 'TADA' },
   { value: 'kokoro', label: 'Kokoro 82M' },
+  { value: 'cosyvoice3', label: 'CosyVoice3 0.5B' },
 ] as const;
 
 function makeProfileSchema(t: (key: string) => string) {
@@ -939,6 +940,7 @@ export function ProfileForm() {
                         </div>
                       ) : (
                         <>
+                          <FormDescription>{t('profileForm.source.cloneHint')}</FormDescription>
                           <Tabs
                             className="pt-0"
                             value={sampleMode}
@@ -1207,9 +1209,7 @@ export function ProfileForm() {
                             {...field}
                           />
                         </FormControl>
-                        <FormDescription>
-                          {t('profileForm.fields.personalityHint')}
-                        </FormDescription>
+                        <FormDescription>{t('profileForm.fields.personalityHint')}</FormDescription>
                         <FormMessage />
                       </FormItem>
                     )}

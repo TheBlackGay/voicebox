@@ -305,6 +305,38 @@ def build_server(cuda=False, rocm=False):
             "unidic_lite",
             "--hidden-import",
             "loguru",
+            # Fun-CosyVoice3-0.5B — vendored inference stack
+            # (backend/vendor/cosyvoice + backend/vendor/matcha; the upstream
+            # repo ships no installable package). --paths vendor lets
+            # PyInstaller discover the vendored packages, --collect-all bundles
+            # the .tiktoken asset used by cosyvoice.tokenizer.
+            "--hidden-import",
+            "backend.backends.cosyvoice3_backend",
+            "--paths",
+            "vendor",
+            "--collect-all",
+            "cosyvoice",
+            "--collect-all",
+            "matcha",
+            "--hidden-import",
+            "onnxruntime",
+            "--collect-all",
+            "onnxruntime",
+            # openai-whisper loads assets/mel_filters.npz and .tiktoken files
+            # at runtime (whisper.audio / whisper.tokenizer)
+            "--collect-all",
+            "whisper",
+            # x-transformers uses typeguard @typechecked (inspect.getsource)
+            "--collect-all",
+            "x_transformers",
+            "--collect-all",
+            "einx",
+            "--copy-metadata",
+            "openai-whisper",
+            "--copy-metadata",
+            "hyperpyyaml",
+            "--copy-metadata",
+            "wetext",
             # MCP server — Streamable-HTTP endpoint and the 4 voicebox.* tools.
             # FastMCP pulls in a chain of deps (mcp, cyclopts, openapi-pydantic,
             # etc.) that don't auto-discover cleanly under PyInstaller, so we

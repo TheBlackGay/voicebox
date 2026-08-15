@@ -27,6 +27,7 @@ const generationSchema = z.object({
       'chatterbox_turbo',
       'tada',
       'kokoro',
+      'cosyvoice3',
     ])
     .optional(),
   personality: z.boolean().optional(),
@@ -100,9 +101,11 @@ export function useGenerationForm(options: UseGenerationFormOptions = {}) {
                   : 'tada-1b'
                 : engine === 'kokoro'
                   ? 'kokoro'
-                  : engine === 'qwen_custom_voice'
-                    ? `qwen-custom-voice-${data.modelSize}`
-                    : `qwen-tts-${data.modelSize}`;
+                  : engine === 'cosyvoice3'
+                    ? 'cosyvoice3'
+                    : engine === 'qwen_custom_voice'
+                      ? `qwen-custom-voice-${data.modelSize}`
+                      : `qwen-tts-${data.modelSize}`;
       const displayName =
         engine === 'luxtts'
           ? 'LuxTTS'
@@ -116,7 +119,9 @@ export function useGenerationForm(options: UseGenerationFormOptions = {}) {
                   : 'TADA 1B'
                 : engine === 'kokoro'
                   ? 'Kokoro 82M'
-                  : engine === 'qwen_custom_voice'
+                  : engine === 'cosyvoice3'
+                    ? 'CosyVoice3 0.5B'
+                    : engine === 'qwen_custom_voice'
                     ? data.modelSize === '1.7B'
                       ? 'Qwen CustomVoice 1.7B'
                       : 'Qwen CustomVoice 0.6B'
@@ -141,7 +146,8 @@ export function useGenerationForm(options: UseGenerationFormOptions = {}) {
         engine === 'qwen' || engine === 'qwen_custom_voice' || engine === 'tada';
       // Only Qwen CustomVoice actually honors the instruct kwarg at model level.
       // Base Qwen3-TTS accepts the kwarg but ignores it.
-      const supportsInstruct = engine === 'qwen_custom_voice';
+      const supportsInstruct =
+        engine === 'qwen_custom_voice' || engine === 'cosyvoice3';
       const effectsChain = options.getEffectsChain?.();
       // This now returns immediately with status="generating"
       const result = await generation.mutateAsync({

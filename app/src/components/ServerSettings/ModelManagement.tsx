@@ -69,6 +69,8 @@ const MODEL_DESCRIPTIONS: Record<string, string> = {
     'HumeAI TADA 3B Multilingual — built on Llama 3.2 3B. Supports 10 languages with high-fidelity voice cloning via text-acoustic dual alignment.',
   kokoro:
     'Kokoro 82M by hexgrad. Tiny 82M-parameter TTS that runs at CPU realtime. Supports 8 languages with pre-built voice styles. Apache 2.0 licensed.',
+  cosyvoice3:
+    'Fun-CosyVoice3-0.5B by Alibaba FunAudioLLM. Zero-shot voice cloning, 9 languages and 18+ Chinese dialects with instruct-based emotion/speed control. Apache 2.0 licensed.',
   'qwen-custom-voice-1.7B':
     'Qwen3-TTS CustomVoice 1.7B by Alibaba. 9 premium preset voices with instruct-based style control for tone, emotion, and prosody. Supports 10 languages.',
   'qwen-custom-voice-0.6B':
@@ -144,6 +146,7 @@ export function ModelManagement() {
   const [downloadingModel, setDownloadingModel] = useState<string | null>(null);
   const [downloadingDisplayName, setDownloadingDisplayName] = useState<string | null>(null);
   const [consoleOpen, setConsoleOpen] = useState(false);
+  const [downloadHelpOpen, setDownloadHelpOpen] = useState(false);
   const [dismissedErrors, setDismissedErrors] = useState<Set<string>>(new Set());
   const [localErrors, setLocalErrors] = useState<Map<string, string>>(new Map());
 
@@ -163,6 +166,12 @@ export function ModelManagement() {
   const { data: cacheDir } = useQuery({
     queryKey: ['modelsCacheDir'],
     queryFn: () => apiClient.getModelsCacheDir(),
+    staleTime: 1000 * 60 * 5,
+  });
+
+  const { data: configFile } = useQuery({
+    queryKey: ['configFile'],
+    queryFn: () => apiClient.getConfigFile(),
     staleTime: 1000 * 60 * 5,
   });
 
@@ -414,7 +423,8 @@ export function ModelManagement() {
         m.model_name.startsWith('luxtts') ||
         m.model_name.startsWith('chatterbox') ||
         m.model_name.startsWith('tada') ||
-        m.model_name.startsWith('kokoro'),
+        m.model_name.startsWith('kokoro') ||
+        m.model_name.startsWith('cosyvoice3'),
     ) ?? [];
   const whisperModels = modelStatus?.models.filter((m) => m.model_name.startsWith('whisper')) ?? [];
   const llmModels = modelStatus?.models.filter((m) => m.model_name.startsWith('qwen3-')) ?? [];
@@ -523,6 +533,48 @@ export function ModelManagement() {
           </div>
         </div>
       )}
+
+      {/* Download acceleration help */}
+      <div className="border rounded-lg overflow-hidden">
+        <button
+          type="button"
+          onClick={() => setDownloadHelpOpen((v) => !v)}
+          className="w-full flex items-center justify-between px-3 py-2 text-xs font-medium text-muted-foreground hover:bg-muted/50 transition-colors"
+        >
+          <span className="flex items-center gap-2">
+            <Download className="h-3.5 w-3.5" />
+            {t('models.downloadHelp.title')}
+          </span>
+          {downloadHelpOpen ? (
+            <ChevronUp className="h-3.5 w-3.5" />
+          ) : (
+            <ChevronDown className="h-3.5 w-3.5" />
+          )}
+        </button>
+        {downloadHelpOpen && (
+          <div className="px-3 pb-3 space-y-2 text-xs text-muted-foreground">
+            <p>{t('models.downloadHelp.body')}</p>
+            <p className="font-mono text-[11px] text-muted-foreground/80 break-all">
+              {configFile?.path}
+            </p>
+            <pre className="rounded-md bg-muted/50 p-2 font-mono text-[11px] leading-relaxed overflow-x-auto">
+              {`{
+  "env": {
+    "HF_TOKEN": "hf_xxxxxxxxxxxxxxxx",
+    "HF_ENDPOINT": "https://hf-mirror.com"
+  }
+}`}
+            </pre>
+            <p>{t('models.downloadHelp.cli')}</p>
+            <pre className="rounded-md bg-muted/50 p-2 font-mono text-[11px] leading-relaxed overflow-x-auto">
+              {`export HF_TOKEN="hf_xxxxxxxxxxxxxxxx"
+export HF_ENDPOINT=https://hf-mirror.com
+hf download FunAudioLLM/Fun-CosyVoice3-0.5B-2512`}
+            </pre>
+            <p className="text-[11px] opacity-80">{t('models.downloadHelp.fallback')}</p>
+          </div>
+        )}
+      </div>
 
       {/* Model list */}
       {isLoading ? (

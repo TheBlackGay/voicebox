@@ -27,6 +27,7 @@ const ENGINE_OPTIONS = [
   { value: 'tada:1B', label: 'TADA 1B', engine: 'tada' },
   { value: 'tada:3B', label: 'TADA 3B Multilingual', engine: 'tada' },
   { value: 'kokoro', label: 'Kokoro 82M', engine: 'kokoro' },
+  { value: 'cosyvoice3', label: 'CosyVoice3 0.5B', engine: 'cosyvoice3' },
 ] as const;
 
 const ENGINE_DESCRIPTIONS: Record<string, string> = {
@@ -37,13 +38,21 @@ const ENGINE_DESCRIPTIONS: Record<string, string> = {
   chatterbox_turbo: 'English, [laugh] [cough] tags',
   tada: 'HumeAI, 700s+ coherent audio',
   kokoro: '82M params, CPU realtime, 8 langs',
+  cosyvoice3: 'Alibaba, zero-shot cloning, 18 zh dialects',
 };
 
 /** Engines that only support English and should force language to 'en' on select. */
 const ENGLISH_ONLY_ENGINES = new Set(['luxtts', 'chatterbox_turbo']);
 
 /** Engines that support cloned (reference audio) profiles. */
-const CLONING_ENGINES = new Set(['qwen', 'luxtts', 'chatterbox', 'chatterbox_turbo', 'tada']);
+const CLONING_ENGINES = new Set([
+  'qwen',
+  'luxtts',
+  'chatterbox',
+  'chatterbox_turbo',
+  'tada',
+  'cosyvoice3',
+]);
 
 function getAvailableOptions(selectedProfile?: VoiceProfileResponse | null) {
   if (!selectedProfile) return ENGINE_OPTIONS;
@@ -129,13 +138,13 @@ export function EngineModelSelector({ form, compact, selectedProfile }: EngineMo
 
   const itemClass = compact ? 'text-xs text-muted-foreground' : undefined;
   const triggerClass = compact
-    ? 'h-8 text-xs bg-card border-border rounded-full hover:bg-background/50 transition-all'
+    ? 'h-8 text-xs bg-accent/10 border-accent/40 text-accent-foreground rounded-full hover:bg-accent/20 transition-all font-medium'
     : undefined;
 
   return (
     <Select value={selectValue} onValueChange={(v) => applyEngineSelection(form, v)}>
       <FormControl>
-        <SelectTrigger className={triggerClass}>
+        <SelectTrigger className={triggerClass} title={getEngineDescription(engine)}>
           <SelectValue />
         </SelectTrigger>
       </FormControl>

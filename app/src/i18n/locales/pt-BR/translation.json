@@ -243,7 +243,8 @@
     "discard": "Descartar",
     "source": {
       "clone": "Clonar de áudio",
-      "builtin": "Voz integrada"
+      "builtin": "Voz integrada",
+      "cloneHint": "A clonagem não está vinculada a um modelo — você pode trocar de motor (ex.: CosyVoice3, Qwen) ao gerar."
     },
     "builtin": {
       "hint": "Escolha uma voz pré-construída. Estas não precisam de uma amostra de áudio.",
@@ -1216,6 +1217,12 @@
     "migrate": {
       "title": "Movendo modelos",
       "offline": "O servidor está offline enquanto os modelos são movidos."
+    },
+    "downloadHelp": {
+      "title": "Aceleração de download (HuggingFace)",
+      "body": "Os modelos são baixados primeiro do HuggingFace. Se o Hub estiver lento ou inacessível, crie ~/.voicebox/config.json com as configurações abaixo e reinicie o aplicativo.",
+      "cli": "Ou baixe manualmente em um terminal (exportando as mesmas variáveis):",
+      "fallback": "Quando o HuggingFace estiver inacessível, os downloads alternam automaticamente para o ModelScope (modelscope.cn)."
     },
     "toast": {
       "downloadFailed": "Falha no download",

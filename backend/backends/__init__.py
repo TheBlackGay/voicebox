@@ -216,6 +216,7 @@ TTS_ENGINES = {
     "chatterbox_turbo": "Chatterbox Turbo",
     "tada": "TADA",
     "kokoro": "Kokoro",
+    "cosyvoice3": "CosyVoice3",
 }
 
 LLM_ENGINES = {
@@ -370,6 +371,15 @@ def _get_non_qwen_tts_configs() -> list[ModelConfig]:
             hf_repo_id="hexgrad/Kokoro-82M",
             size_mb=350,
             languages=["en", "es", "fr", "hi", "it", "pt", "ja", "zh"],
+        ),
+        ModelConfig(
+            model_name="cosyvoice3",
+            display_name="CosyVoice3 0.5B",
+            engine="cosyvoice3",
+            hf_repo_id="FunAudioLLM/Fun-CosyVoice3-0.5B-2512",
+            size_mb=5400,
+            supports_instruct=True,
+            languages=["zh", "en", "ja", "ko", "de", "fr", "ru", "pt", "es", "it"],
         ),
     ]
 
@@ -723,6 +733,10 @@ def get_tts_backend_for_engine(engine: str) -> TTSBackend:
             from .qwen_custom_voice_backend import QwenCustomVoiceBackend
 
             backend = QwenCustomVoiceBackend()
+        elif engine == "cosyvoice3":
+            from .cosyvoice3_backend import CosyVoice3TTSBackend
+
+            backend = CosyVoice3TTSBackend()
         else:
             raise ValueError(f"Unknown TTS engine: {engine}. Supported: {list(TTS_ENGINES.keys())}")
 

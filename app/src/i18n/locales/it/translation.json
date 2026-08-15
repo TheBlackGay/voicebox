@@ -243,7 +243,8 @@
     "discard": "Scarta",
     "source": {
       "clone": "Clona da audio",
-      "builtin": "Voce integrata"
+      "builtin": "Voce integrata",
+      "cloneHint": "La clonazione non è legata a un modello: puoi cambiare motore (es. CosyVoice3, Qwen) in qualsiasi momento durante la generazione."
     },
     "builtin": {
       "hint": "Scegli una voce predefinita. Queste non richiedono un campione audio.",
@@ -379,7 +380,7 @@
       "play": "Riproduci campione",
       "pause": "Pausa campione",
       "stop": "Interrompi",
-            "stopAria": "Interrompi riproduzione",
+      "stopAria": "Interrompi riproduzione",
       "position": "Posizione riproduzione campione",
       "positionValue": "{{current}} di {{total}}"
     },
@@ -1124,7 +1125,8 @@
         "title": "Passa al backend CPU",
         "description": "Disabilita l'accelerazione GPU. Potrai scaricare nuovamente il backend GPU in un secondo momento.",
         "button": "Passa a CPU"
-      },      "remove": {
+      },
+      "remove": {
         "title": "Rimuovi il backend CUDA",
         "description": "Elimina il file binario CUDA scaricato per liberare spazio sul disco.",
         "button": "Rimuovi"
@@ -1248,6 +1250,12 @@
     "migrate": {
       "title": "Spostamento dei modelli",
       "offline": "Il server è offline durante lo spostamento dei modelli."
+    },
+    "downloadHelp": {
+      "title": "Accelerazione download (HuggingFace)",
+      "body": "I modelli vengono scaricati prima da HuggingFace. Se l'Hub è lento o irraggiungibile, crea ~/.voicebox/config.json con le impostazioni qui sotto e riavvia l'app.",
+      "cli": "Oppure scarica manualmente da un terminale (esportando le stesse variabili):",
+      "fallback": "Quando HuggingFace non è raggiungibile, i download passano automaticamente a ModelScope (modelscope.cn)."
     },
     "toast": {
       "downloadFailed": "Download non riuscito",

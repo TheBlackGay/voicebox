@@ -4,21 +4,37 @@ import type {
   ActiveTasksResponse,
   ApplyEffectsRequest,
   AvailableEffectsResponse,
+  CaptureCreateResponse,
+  CaptureListResponse,
+  CaptureReadinessResponse,
+  CaptureRefineRequest,
+  CaptureResponse,
+  CaptureRetranscribeRequest,
+  CaptureSettings,
+  CaptureSettingsUpdate,
+  CaptureSource,
+  CloudLoginStartResponse,
+  CloudStatus,
   CudaStatus,
   EffectConfig,
   EffectPresetCreate,
   EffectPresetResponse,
   GenerationRequest,
   GenerationResponse,
+  GenerationSettings,
+  GenerationSettingsUpdate,
   GenerationVersionResponse,
   HealthResponse,
   HistoryListResponse,
   HistoryQuery,
   HistoryResponse,
+  MCPClientBinding,
+  MCPClientBindingListResponse,
+  MCPClientBindingUpsert,
   ModelDownloadRequest,
   ModelStatusListResponse,
-  PresetVoice,
   PersonalityTextResponse,
+  PresetVoice,
   ProfileSampleResponse,
   RocmStatus,
   StoryCreate,
@@ -37,22 +53,6 @@ import type {
   VoiceProfileCreate,
   VoiceProfileResponse,
   WhisperModelSize,
-  CaptureListResponse,
-  CaptureResponse,
-  CaptureCreateResponse,
-  CaptureReadinessResponse,
-  CaptureRefineRequest,
-  CaptureRetranscribeRequest,
-  CaptureSettings,
-  CaptureSettingsUpdate,
-  CaptureSource,
-  GenerationSettings,
-  GenerationSettingsUpdate,
-  MCPClientBinding,
-  MCPClientBindingListResponse,
-  MCPClientBindingUpsert,
-  CloudLoginStartResponse,
-  CloudStatus,
 } from './types';
 
 function formatErrorDetail(detail: unknown, fallback: string): string {
@@ -427,9 +427,7 @@ class ApiClient {
 
   // Captures
   async listCaptures(limit = 50, offset = 0): Promise<CaptureListResponse> {
-    return this.request<CaptureListResponse>(
-      `/captures?limit=${limit}&offset=${offset}`,
-    );
+    return this.request<CaptureListResponse>(`/captures?limit=${limit}&offset=${offset}`);
   }
 
   async getCapture(captureId: string): Promise<CaptureResponse> {
@@ -467,10 +465,7 @@ class ApiClient {
     });
   }
 
-  async refineCapture(
-    captureId: string,
-    body: CaptureRefineRequest,
-  ): Promise<CaptureResponse> {
+  async refineCapture(captureId: string, body: CaptureRefineRequest): Promise<CaptureResponse> {
     return this.request<CaptureResponse>(`/captures/${captureId}/refine`, {
       method: 'POST',
       body: JSON.stringify(body),
@@ -511,9 +506,7 @@ class ApiClient {
     return this.request<GenerationSettings>('/settings/generation');
   }
 
-  async updateGenerationSettings(
-    patch: GenerationSettingsUpdate,
-  ): Promise<GenerationSettings> {
+  async updateGenerationSettings(patch: GenerationSettingsUpdate): Promise<GenerationSettings> {
     return this.request<GenerationSettings>('/settings/generation', {
       method: 'PUT',
       body: JSON.stringify(patch),
@@ -525,9 +518,7 @@ class ApiClient {
     return this.request<MCPClientBindingListResponse>('/mcp/bindings');
   }
 
-  async upsertMCPBinding(
-    data: MCPClientBindingUpsert,
-  ): Promise<MCPClientBinding> {
+  async upsertMCPBinding(data: MCPClientBindingUpsert): Promise<MCPClientBinding> {
     return this.request<MCPClientBinding>('/mcp/bindings', {
       method: 'PUT',
       body: JSON.stringify(data),
@@ -535,10 +526,9 @@ class ApiClient {
   }
 
   async deleteMCPBinding(clientId: string): Promise<{ deleted: string }> {
-    return this.request<{ deleted: string }>(
-      `/mcp/bindings/${encodeURIComponent(clientId)}`,
-      { method: 'DELETE' },
-    );
+    return this.request<{ deleted: string }>(`/mcp/bindings/${encodeURIComponent(clientId)}`, {
+      method: 'DELETE',
+    });
   }
 
   // Model Management
@@ -548,6 +538,10 @@ class ApiClient {
 
   async getModelsCacheDir(): Promise<{ path: string }> {
     return this.request<{ path: string }>('/models/cache-dir');
+  }
+
+  async getConfigFile(): Promise<{ path: string }> {
+    return this.request<{ path: string }>('/settings/config-file');
   }
 
   async migrateModels(

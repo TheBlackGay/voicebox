@@ -16,6 +16,9 @@ src = ["."]
 extend-exclude = [
     "voicebox-server.spec",
     "build_binary.py",
+    # Vendored upstream inference sources (FunAudioLLM/CosyVoice and
+    # Matcha-TTS) — not subject to our lint rules.
+    "vendor",
 ]
 
 [tool.ruff.lint]

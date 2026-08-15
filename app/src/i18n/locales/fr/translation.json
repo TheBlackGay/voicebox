@@ -243,7 +243,8 @@
     "discard": "Annuler",
     "source": {
       "clone": "Cloner à partir de l'audio",
-      "builtin": "Voix intégrée"
+      "builtin": "Voix intégrée",
+      "cloneHint": "Le clonage n'est pas lié à un modèle — changez de moteur (ex. CosyVoice3, Qwen) à tout moment lors de la génération."
     },
     "builtin": {
       "hint": "Choisissez une voix pré-construite. Ces voix ne nécessitent pas d'échantillon audio.",
@@ -761,7 +762,10 @@
     },
     "general": {
       "docs": { "title": "Lire la documentation" },
-      "discord": { "title": "Rejoindre le Discord", "subtitle": "Obtenez de l'aide et partagez des voix" },
+      "discord": {
+        "title": "Rejoindre le Discord",
+        "subtitle": "Obtenez de l'aide et partagez des voix"
+      },
       "serverUrl": {
         "title": "URL du serveur",
         "description": "L'adresse de votre serveur Voicebox.",
@@ -1216,6 +1220,12 @@
     "migrate": {
       "title": "Déplacement des modèles",
       "offline": "Le serveur est hors ligne pendant le déplacement des modèles."
+    },
+    "downloadHelp": {
+      "title": "Accélération des téléchargements (HuggingFace)",
+      "body": "Les modèles sont téléchargés depuis HuggingFace en priorité. Si le Hub est lent ou inaccessible, créez ~/.voicebox/config.json avec les réglages ci-dessous, puis redémarrez l'application.",
+      "cli": "Ou téléchargez manuellement dans un terminal (après avoir exporté les mêmes variables) :",
+      "fallback": "Lorsque HuggingFace est inaccessible, les téléchargements basculent automatiquement sur ModelScope (modelscope.cn)."
     },
     "toast": {
       "downloadFailed": "Échec du téléchargement",

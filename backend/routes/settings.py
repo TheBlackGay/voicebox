@@ -10,6 +10,14 @@ from ..services import settings as settings_service
 router = APIRouter(prefix="/settings", tags=["settings"])
 
 
+@router.get("/config-file")
+async def get_config_file_endpoint():
+    """Path to the per-user config file, outside the read-only app bundle."""
+    from ..config import get_config_file
+
+    return {"path": str(get_config_file())}
+
+
 @router.get("/captures", response_model=models.CaptureSettingsResponse)
 async def get_capture_settings_endpoint(db: Session = Depends(get_db)):
     return settings_service.get_capture_settings(db)

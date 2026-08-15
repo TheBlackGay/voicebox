@@ -7,6 +7,41 @@
 
 ## [Unreleased]
 
+**The CosyVoice3 release.** Voicebox adds Alibaba's Fun-CosyVoice3-0.5B as a full engine:
+zero-shot voice cloning from a few seconds of reference audio, 10 languages plus 18+
+Chinese dialects, and instruct-based control of emotion, speed, and style. The inference
+stack is vendored and bundled into the packaged app, so the new engine runs everywhere
+the rest of the app does.
+
+### New Engine — CosyVoice3
+
+- **CosyVoice3 0.5B engine.** New TTS engine with zero-shot cloning, 10 languages, and
+  18+ Chinese dialects, plus instruct-based emotion/speed/style control. Wired through the
+  engine picker, profile form, captures flow, MCP-speak, and the E2E model matrix.
+- **Voice cloning no longer binds to a specific engine.** Cloning-capable engines are
+  highlighted in the generation UI when a cloned profile is selected, so the model choice
+  stays explicit and CosyVoice3 (or any other compatible engine) can be used to clone.
+- **Vendored inference stack.** `backend/vendor/cosyvoice` + `matcha` ship in the repo and
+  are bundled by PyInstaller, so CosyVoice3 runs in the packaged app without extra installs.
+  Includes a fix for the Qwen2 encoder attention-mask bug that produced garbled output.
+
+### Model Downloads
+
+- **HuggingFace first, ModelScope fallback.** Model snapshots download from HuggingFace and
+  transparently fall back to modelscope.cn when the Hub is unreachable.
+- **Per-user download acceleration config.** `~/.voicebox/config.json` (an `env` map with
+  `HF_TOKEN` / `HF_ENDPOINT`) is loaded at startup from outside the read-only app bundle;
+  the Models page shows the exact file path and a copy-paste template.
+- **Download acceleration help card** in the Models UI (9 languages) with the config template
+  and an optional manual `hf download` command.
+
+### macOS Packaging
+
+- **One-shot DMG build script.** `scripts/build-macos.sh` (or `just build-macos`) builds the
+  PyInstaller sidecars and bundles a distributable `.dmg`. It skips updater-artifact signing
+  (the private key only exists in CI), retries the transient DMG bundler failure, and restores
+  the dev placeholder sidecars afterwards. Documented in the developer building guide.
+
 ### Linux
 
 - **ROCm setup works on Linux AMD systems.** Docker ROCm builds now keep PyTorch

@@ -188,7 +188,7 @@ Shipped 2026-04-25 (PR #544). Voicebox went from a voice-cloning studio to a ful
 
 | Model | PR / Branch | Reason |
 |-------|-------------|--------|
-| **CosyVoice2/3** | PR #311 | Output quality too poor. Heavy deps, no PyPI, needed 5+ shims. PR should be closed. |
+| **CosyVoice2/3** | PR #311 | CosyVoice2/3 (2024-era) output quality too poor. **Fun-CosyVoice3-0.5B has since shipped as engine `cosyvoice3`** (2026-08) — see TTS Engine Comparison. |
 | **VoxCPM 1.5 / VoxCPM2** | `voicebox-new-models` research (2026-04-18) | **Backlogged.** See detailed analysis below. |
 
 #### VoxCPM — Evaluation Notes (2026-04-18)
@@ -578,6 +578,7 @@ Notable:
 | **HumeAI TADA 1B/3B** | Zero-shot | 5x faster than LLM-TTS | 24 kHz | EN (1B), 10 (3B) | Medium | Partial — prosody | PyTorch | **Shipped** (PR #296) |
 | **Kokoro-82M** | Preset voices | CPU realtime | 24 kHz | 8 | Tiny (82M) | None | All | **Shipped** (PR #325) |
 | ~~**CosyVoice2-0.5B**~~ | 3-10s zero-shot | Very fast | 24 kHz | Multilingual | Low | **Yes** | — | **Abandoned** (PR #311) — poor output quality |
+| **Fun-CosyVoice3-0.5B** | 3-30s zero-shot | ~1.2x realtime (CPU) | 24 kHz | 9 + 18 zh dialects | Low | **Yes** — instruct2 | All | **Shipped** (2026-08) — vendored inference, Apache-2.0 |
 | ~~**VoxCPM2**~~ | Zero-shot | ~0.15 RTF streaming | 48 kHz | 30 | Medium | Partial — parenthetical style | **CUDA-only in practice** | **Backlogged** (2026-04-18) — see notes above |
 | **Fish Speech** | 10-30s few-shot | Real-time | 24-44 kHz | 50+ | Medium | **Yes** — word-level inline | All | Candidate — license TBD |
 | **Fish Audio S2** | — | — | — | — | — | — | — | Candidate (#385) |

@@ -269,6 +269,12 @@ build-tauri:
 build-tauri:
     Set-Location "{{ tauri_dir }}"; bun run tauri build
 
+# Build a distributable macOS DMG (PyInstaller sidecar + Tauri bundle).
+# The DMG is ad-hoc signed and not notarized; see scripts/build-macos.sh.
+[unix]
+build-macos:
+    ./scripts/build-macos.sh
+
 # Build web app
 [unix]
 build-web:

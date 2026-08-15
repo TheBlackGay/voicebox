@@ -243,7 +243,8 @@
     "discard": "捨棄",
     "source": {
       "clone": "從音訊複製",
-      "builtin": "內建聲音"
+      "builtin": "內建聲音",
+      "cloneHint": "複製不綁定模型，生成時可隨時切換引擎（如 CosyVoice3、Qwen）。"
     },
     "builtin": {
       "hint": "選擇預建的聲音。這些不需要音訊樣本。",
@@ -1216,6 +1217,12 @@
     "migrate": {
       "title": "移動模型中",
       "offline": "模型遷移期間伺服器處於離線狀態。"
+    },
+    "downloadHelp": {
+      "title": "下載加速設定（HuggingFace）",
+      "body": "模型預設優先從 HuggingFace 下載。如果下載慢或連不上，請建立 ~/.voicebox/config.json 並填入下列設定，然後重新啟動應用。",
+      "cli": "也可以手動在終端機中下載（需要先匯出相同的變數）：",
+      "fallback": "當 HuggingFace 無法連通時，會自動回退到 ModelScope（modelscope.cn）下載。"
     },
     "toast": {
       "downloadFailed": "下載失敗",

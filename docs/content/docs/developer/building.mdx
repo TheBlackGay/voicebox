@@ -16,6 +16,7 @@ Voicebox uses a two-stage build process:
 just build          # Build everything (server + Tauri)
 just build-server   # Build Python server binary only
 just build-tauri    # Build Tauri app only
+just build-macos    # Build a distributable macOS DMG (see below)
 ```
 
 ## Server Binary Build
@@ -126,6 +127,32 @@ The server binary is declared as an external binary in `tauri.conf.json`:
 ```
 
 Tauri looks for `voicebox-server-${PLATFORM}` in `src-tauri/binaries/` and bundles it.
+
+## Local macOS DMG (distributable)
+
+To hand a friend a ready-to-install macOS package, run the one-shot script —
+it builds the Python sidecar, bundles the Tauri app, and produces the DMG:
+
+```bash
+./scripts/build-macos.sh
+# or: just build-macos
+```
+
+**Output:**
+- `tauri/src-tauri/target/release/bundle/macos/Voicebox.app`
+- `tauri/src-tauri/target/release/bundle/dmg/Voicebox_<version>_<arch>.dmg`
+
+**What the script does:**
+1. `scripts/build-server.sh` — PyInstaller sidecars (`voicebox-server`, `voicebox-mcp`) copied into `tauri/src-tauri/binaries/`
+2. `bun run tauri build --config '{"bundle":{"createUpdaterArtifacts":false}}'` — bundles the `.app` + DMG and skips updater artifact signing (the private key only exists in CI secrets)
+3. Retries the Tauri build once if the DMG bundler hits a transient volume-busy error
+4. Restores the dev-mode placeholder sidecars so `tauri dev` keeps using `bun run dev:server`
+
+**Distribution notes:**
+- Only the host architecture is built (`aarch64` on Apple Silicon). Intel Macs need a build on an `x86_64-apple-darwin` host (see the release matrix in `.github/workflows/release.yml`).
+- The local DMG is ad-hoc signed and **not notarized** (no Developer ID certificate), so recipients must right-click the app → Open once, or run `xattr -cr /Applications/Voicebox.app`.
+- Model weights are not bundled — they download in-app on first use (HuggingFace first, ModelScope fallback).
+- The full signed + notarized release pipeline lives in `.github/workflows/release.yml`.
 
 ## GitHub Actions Release
 

@@ -10,6 +10,21 @@ from contextlib import asynccontextmanager
 from pathlib import Path
 
 
+def _load_user_config() -> None:
+    """Load the per-user config before torch / huggingface_hub initialize.
+
+    Packaged builds read ``~/.voicebox/config.json`` (outside the read-only app
+    bundle) so download acceleration (HF_TOKEN / HF_ENDPOINT) applies from the
+    start. ``VOICEBOX_CONFIG_FILE`` overrides the path for tests and dev.
+    """
+    from . import config
+
+    config.load_user_config()
+
+
+_load_user_config()
+
+
 class ColoredFormatter(logging.Formatter):
     """Custom formatter to add colors matching uvicorn's style."""
 

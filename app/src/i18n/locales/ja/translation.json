@@ -243,7 +243,8 @@
     "discard": "破棄",
     "source": {
       "clone": "オーディオから複製",
-      "builtin": "ビルトインボイス"
+      "builtin": "ビルトインボイス",
+      "cloneHint": "クローンはモデルに固定されません。生成時にいつでもエンジンを切り替えられます（例: CosyVoice3、Qwen）。"
     },
     "builtin": {
       "hint": "あらかじめ用意されたボイスを選択してください。オーディオサンプルは不要です。",
@@ -1216,6 +1217,12 @@
     "migrate": {
       "title": "モデルを移動中",
       "offline": "モデルの移動中はサーバーがオフラインになります。"
+    },
+    "downloadHelp": {
+      "title": "ダウンロード高速化（HuggingFace）",
+      "body": "モデルはまず HuggingFace からダウンロードします。遅い・繋がらない場合は、下の設定を ~/.voicebox/config.json に作成して、アプリを再起動してください。",
+      "cli": "または、ターミナルで手動ダウンロードすることもできます（同じ変数をエクスポートしてください）：",
+      "fallback": "HuggingFace に接続できない場合は、ModelScope（modelscope.cn）に自動フォールバックします。"
     },
     "toast": {
       "downloadFailed": "ダウンロードに失敗しました",
